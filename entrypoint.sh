@@ -1,33 +1,40 @@
 #!/usr/bin/env bash
 
-# to avoid continuing when errors or undefined variables are present
-set -eu
-
-# Download and extract vale
-wget https://github.com/errata-ai/vale/releases/download/v1.3.2/vale_1.3.2_Linux_64-bit.tar.gz
-tar -xvzf vale_1.3.2_Linux_64-bit.tar.gz vale
-
-# Save output in a file
 touch output.txt
+touch ignored.txt
 
-# git test
-git branch
-git status
+MASTER_HASH=$(git rev-parse origin/master)
 
-#find modified files in last commit and only run vale on modified files
-for i in $(git diff --name-only "$(git rev-parse HEAD~1)") ; do
-#  fileList[$N]="$i"
-  if [ "${i: -3}" == ".md" ] ; then
-    echo -e "CHECKING REFERENCES for ${i}"
-    ./vale "${i}" >> output.txt
-    echo $'\n'
-    (( N= N + 1 ))
+EXTENSION_ARRAY=(.md .adoc .rst .txt)
+
+containsElement () {
+  local e match="$1"
+  shift
+  for e; do [[ "$e" == "$match" ]] && return 0; done
+  return 1
+}
+
+mapfile -t FILE_ARRAY < <( git diff --name-only "$MASTER_HASH" )
+
+for i in "${FILE_ARRAY[@]}"
+do
+  if ( containsElement "${i: -3}" "${EXTENSION_ARRAY[@]}" ) || ( containsElement "${i: -4}" "${EXTENSION_ARRAY[@]}" ) || ( containsElement "${i: -5}" "${EXTENSION_ARRAY[@]}" ) ; then
+    ../../vale "${i}" >> output.txt
   else
-    echo "Ignored ${i}, not a markdown file."
+    echo "${i}" >> ignored.txt
   fi
 done
 
-if [ -s output.txt ] 
-then
- cat output.txt
+if [ -s output.txt ] ; then
+  echo "=========================> ERRORS <========================="
+  cat output.txt
+  echo "============================================================"
+  if [ -s ignored.txt ] ; then
+    echo ""
+    echo "----> IGNORED FILES <----"
+    cat ignored.txt
+  fi
+  exit 113
+else
+  echo "All good!"
 fi
