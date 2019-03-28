@@ -1,14 +1,28 @@
-# github-action-vale-lint
-Lint text files with Vale linter.
+# Github action: Lint with Vale ✅❎
 
-## Getting Started
+Automatically lint all modified text files in your GitHub pull requests. This GitHub action uses [Vale](https://errata-ai.github.io/vale/) to lint prose.
 
-Rule 1: Don't start sentences with "so":
+![Lint with Vale]()
 
-> So, this is an example sentence.
+The `github-action-vale-lint` checks all modified text (including markup) files and reports failure on error. 
 
-Rule 2: Don't start a sentence with "there is" or "there are":
+![Vale error list]()
 
-> There are many ways to start a sentence. test comment.
+## Prerequisite
+You must have [Vale configuration file](https://errata-ai.github.io/vale/config/) `.vale.ini` in your repository.
 
-Multiple commits test.
+## Workflow action
+
+![Lint with Vale on PR]()
+
+```
+workflow "Lint with vale on PR" {
+  on = "pull_request"
+  resolves = ["vale-lint-PR"]
+}
+
+action "vale-lint-PR" {
+  uses = "./"
+}
+```
+
