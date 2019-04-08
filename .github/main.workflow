@@ -5,5 +5,5 @@ workflow "Lint with vale on PR" {
 
 action "vale-lint-PR" {
   uses = "./"
-  secrets = ["GITHUB_TOKEN"]
+  secrets = ["CONTENT_PATH"]
 }

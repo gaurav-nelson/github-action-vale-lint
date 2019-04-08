@@ -14,27 +14,45 @@ containsElement () {
   return 1
 }
 
-mapfile -t FILE_ARRAY < <( git diff --name-only "$MASTER_HASH" )
+checkAllFiles () {
+  set -eu
+  echo "=========================> VALE LINT <========================="
+  ../../vale --glob='*.{md,txt,rst,adoc}' "${CONTENT_PATH}"
+  echo "==============================================================="
+}
 
-for i in "${FILE_ARRAY[@]}"
-do
-  if ( containsElement "${i: -3}" "${EXTENSION_ARRAY[@]}" ) || ( containsElement "${i: -4}" "${EXTENSION_ARRAY[@]}" ) || ( containsElement "${i: -5}" "${EXTENSION_ARRAY[@]}" ) ; then
-    ../../vale "${i}" >> output.txt
+checkModifiedFiles () {
+
+  mapfile -t FILE_ARRAY < <( git diff --name-only "$MASTER_HASH" )
+
+  for i in "${FILE_ARRAY[@]}"
+  do
+    if ( containsElement "${i: -3}" "${EXTENSION_ARRAY[@]}" ) || ( containsElement "${i: -4}" "${EXTENSION_ARRAY[@]}" ) || ( containsElement "${i: -5}" "${EXTENSION_ARRAY[@]}" ) ; then
+      ../../vale "${i}" >> output.txt
+    else
+      echo "${i}" >> ignored.txt
+    fi
+  done
+
+  if [ -s output.txt ] ; then
+    echo "=========================> ERRORS <========================="
+    cat output.txt
+    echo "============================================================"
+    if [ -s ignored.txt ] ; then
+      echo ""
+      echo "----> IGNORED FILES <----"
+      cat ignored.txt
+    fi
+    exit 113
   else
-    echo "${i}" >> ignored.txt
+    echo "All good!"
   fi
-done
 
-if [ -s output.txt ] ; then
-  echo "=========================> ERRORS <========================="
-  cat output.txt
-  echo "============================================================"
-  if [ -s ignored.txt ] ; then
-    echo ""
-    echo "----> IGNORED FILES <----"
-    cat ignored.txt
-  fi
-  exit 113
+}
+
+if [ -z "$CONTENT_PATH" ]
+then
+      checkModifiedFiles
 else
-  echo "All good!"
+      checkAllFiles
 fi
