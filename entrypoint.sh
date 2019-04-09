@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+echo "$CONTENT_PATH"
 touch output.txt
 touch ignored.txt
 
