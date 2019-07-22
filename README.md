@@ -25,4 +25,3 @@ action "vale-lint-PR" {
   uses = "./"
 }
 ```
-

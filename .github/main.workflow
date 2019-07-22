@@ -5,4 +5,5 @@ workflow "Lint with vale on PR" {
 
 action "vale-lint-PR" {
   uses = "./"
+  secrets = ["GH_COMMENT_TOKEN"]
 }
