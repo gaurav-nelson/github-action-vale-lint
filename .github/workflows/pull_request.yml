@@ -1,0 +1,11 @@
+on: pull_request
+name: Lint with vale on PR
+jobs:
+  vale-lint-PR:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: vale-lint-PR
+      uses: ./
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
