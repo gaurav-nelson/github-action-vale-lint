@@ -8,4 +8,4 @@ jobs:
     - name: vale-lint-PR
       uses: ./
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_COMMENT_TOKEN: ${{ secrets.GH_COMMENT_TOKEN }}

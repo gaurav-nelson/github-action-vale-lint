@@ -11,18 +11,29 @@ The `github-action-vale-lint` checks all modified text (including markup) files 
 ## Prerequisite
 You must have [Vale configuration file](https://errata-ai.github.io/vale/config/) `.vale.ini` in your repository.
 
-## Workflow action
+## Workflow file
+Sample workflow file `pull_request.yml`:
 
 ![Lint with Vale on PR](https://raw.githubusercontent.com/gaurav-nelson/github-action-vale-lint/master/images/lint-with-vale-on-pr.png)
 
 ```
-workflow "Lint with vale on PR" {
-  on = "pull_request"
-  resolves = ["vale-lint-PR"]
-}
-
-action "vale-lint-PR" {
-  uses = "./"
-}
+on: pull_request
+name: Lint with vale on PR
+jobs:
+  vale-lint-PR:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: vale-lint-PR
+      uses: ./
+      env:
+        GH_COMMENT_TOKEN: ${{ secrets.GH_COMMENT_TOKEN }}
 ```
 
+## Add Vale errors as comments on PR
+
+In your repository:
+1. Go to **Settings** > **Secrets**, and slect **Add a new secret**.
+1. Enter **GH_COMMENT_TOKEN** for **Name**, and enter your secret token as
+   **Value**.
+1. Select **Add secret**.
