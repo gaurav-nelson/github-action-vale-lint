@@ -107,8 +107,8 @@ if [ -s output.txt ] ; then
     echo ""
   fi
   if [[ -z "${GH_COMMENT_TOKEN}" ]]; then
-    echo -e "${BLUE}NOTE: If you want to add these errors as a comment on the original pull request, add a GH_COMMENT_TOKEN as an environment variable.${NC}"
-    echo -e "${BLUE}To add a new Secret, go to Repository Settings > Secrets > Add a new secret${NC}"
+    echo -e "${YELLOW}NOTE: If you want to add errors as a comment on the original pull request, add a GH_COMMENT_TOKEN as a Secret."
+    echo -e "To add a new Secret, go to ${BLUE}Repository Settings > Secrets > Add a new secret${NC}"
   else
     NO_ERROR="0 errors, 0 warnings and 0 suggestions"
     if grep -qF "$NO_ERROR" output.txt
@@ -124,8 +124,8 @@ if [ -s output.txt ] ; then
   exit 113
 else
   if [[ -z "${GH_COMMENT_TOKEN}" ]]; then
-    echo -e "${BLUE}NOTE: If you want to add these errors as a comment on the original pull request, add a GH_COMMENT_TOKEN as an environment variable.${NC}"
-    echo -e "${BLUE}To add a new Secret, go to Repository Settings > Secrets > Add a new secret${NC}"
+    echo -e "${YELLOW}NOTE: If you want to add errors as a comment on the original pull request, add a GH_COMMENT_TOKEN as a Secret."
+    echo -e "To add a new Secret, go to ${BLUE}Repository Settings > Secrets > Add a new secret${NC}"
     echo -e "${GREEN}All good!${NC}"
   else
   check_events_json;
