@@ -30,7 +30,7 @@ You must have [Vale configuration file](https://errata-ai.github.io/vale/config/
        - uses: actions/checkout@master
          with:
            fetch-depth: 1
-       - uses: gaurav-nelson/github-action-vale-lint@v0.0.2-alpha
+       - uses: gaurav-nelson/github-action-vale-lint@v0.0.3
          env:
            GH_COMMENT_TOKEN: ${{ secrets.GH_COMMENT_TOKEN }}
    ```
