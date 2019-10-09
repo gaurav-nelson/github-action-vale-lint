@@ -11,6 +11,8 @@ BLUE='\033[0;34m'
 
 MASTER_HASH=$(git rev-parse origin/master)
 EXTENSION_ARRAY=(.md .adoc .rst .txt)
+LINT_ALL_FILES_INPUT="$1"
+DIRECTORY_TO_LINT_INPUT="$2"
 
 # ---- For PR comments START ----
 
@@ -84,16 +86,21 @@ containsElement () {
   return 1
 }
 
-mapfile -t FILE_ARRAY < <( git diff --name-only "$MASTER_HASH" )
+if [ "$LINT_ALL_FILES_INPUT" = "yes" ]; then
+  echo -e "${YELLOW}Linting all files from the directory ${BLUE}${DIRECTORY_TO_LINT_INPUT}${YELLOW}${NC}"
+  /vale --glob='*.{md,adoc,rst,txt}' "${DIRECTORY_TO_LINT_INPUT}" >> output.txt
+else
+  mapfile -t FILE_ARRAY < <( git diff --name-only "$MASTER_HASH" )
 
-for i in "${FILE_ARRAY[@]}"
-do
-  if ( containsElement "${i: -3}" "${EXTENSION_ARRAY[@]}" ) || ( containsElement "${i: -4}" "${EXTENSION_ARRAY[@]}" ) || ( containsElement "${i: -5}" "${EXTENSION_ARRAY[@]}" ) ; then
-    /vale "${i}" >> output.txt
-  else
-    echo "${i}" >> ignored.txt
-  fi
-done
+  for i in "${FILE_ARRAY[@]}"
+  do
+    if ( containsElement "${i: -3}" "${EXTENSION_ARRAY[@]}" ) || ( containsElement "${i: -4}" "${EXTENSION_ARRAY[@]}" ) || ( containsElement "${i: -5}" "${EXTENSION_ARRAY[@]}" ) ; then
+      /vale "${i}" >> output.txt
+    else
+      echo "${i}" >> ignored.txt
+    fi
+  done
+fi
 
 if [ -s output.txt ] ; then
   echo -e "${YELLOW}=========================> ERRORS <========================="
@@ -128,9 +135,9 @@ else
     echo -e "To add a new Secret, go to ${BLUE}Repository Settings > Secrets > Add a new secret${NC}"
     echo -e "${GREEN}All good!${NC}"
   else
-  check_events_json;
-  NUMBER=$(jq --raw-output .number "${GITHUB_EVENT_PATH}");
-  clean_up;
-  echo -e "${GREEN}All good!${NC}"
+    check_events_json;
+    NUMBER=$(jq --raw-output .number "${GITHUB_EVENT_PATH}");
+    clean_up;
+    echo -e "${GREEN}All good!${NC}"
   fi
 fi
