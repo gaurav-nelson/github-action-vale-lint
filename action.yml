@@ -4,6 +4,18 @@ author: 'Gaurav Nelson'
 branding:
   icon: 'check-circle'  
   color: 'blue'
+inputs:
+  lint-all-files:
+    description: 'Use yes if you want to lint all files instead of linting only modified files.'
+    required: true
+    default: 'no'
+  dir-to-lint:
+    description: 'Specify path of the directory to lint. Use this in conjunction with the lint-all-files argument.'
+    required: true
+    default: '.'
 runs:
   using: 'docker'
   image: 'Dockerfile'
+  args:
+    - ${{ inputs.lint-all-files }}
+    - ${{ inputs.dir-to-lint }}

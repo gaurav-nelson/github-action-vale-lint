@@ -14,15 +14,13 @@ You must have [Vale configuration file](https://errata-ai.github.io/vale/config/
 ## How to use
 1. Create a new file in your repository `.github/workflows/action.yml`.
    ```bash
-   touch .github/workflows/action.yml
+   touch .github/workflows/pull_request.yml
    ```
-1. Copy-paste the folloing workflow in your `action.yml` file:
+1. Copy-paste the folloing workflow in your `pull_request.yml` file:
 
    ```yml
    name: Lint PRs with Vale
-   
    on: pull_request
-   
    jobs:
      vale-lint-PR:
        runs-on: ubuntu-latest
@@ -30,7 +28,28 @@ You must have [Vale configuration file](https://errata-ai.github.io/vale/config/
        - uses: actions/checkout@master
          with:
            fetch-depth: 1
-       - uses: gaurav-nelson/github-action-vale-lint@v0.0.3
+       - uses: gaurav-nelson/github-action-vale-lint@v0.1.0
+         env:
+           GH_COMMENT_TOKEN: ${{ secrets.GH_COMMENT_TOKEN }}
+   ```
+1. Or, if you want to lint all files (or files in a specific folder)
+   and not just modified files, use the following workflow in your
+   `pull_request.yml` file:
+
+   ```yml
+   name: Lint PRs with Vale
+   on: pull_request
+   jobs:
+     vale-lint-PR:
+       runs-on: ubuntu-latest
+       steps:
+       - uses: actions/checkout@master
+         with:
+           fetch-depth: 1
+       - uses: gaurav-nelson/github-action-vale-lint@v0.1.0
+         with:
+           lint-all-files: 'yes' 
+           dir-to-lint: 'directory/path/to/lint'
          env:
            GH_COMMENT_TOKEN: ${{ secrets.GH_COMMENT_TOKEN }}
    ```
