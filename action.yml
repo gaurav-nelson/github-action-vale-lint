@@ -1,0 +1,9 @@
+name: 'vale-lint'
+description: 'Vale - linter for prose'
+author: 'Gaurav Nelson'
+branding:
+  icon: 'check-circle'  
+  color: 'blue'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
