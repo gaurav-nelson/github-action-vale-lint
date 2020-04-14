@@ -1,3 +1,4 @@
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 # DEPRECATED ⛔️ 
 Use the official Vale action available at https://github.com/errata-ai/vale-action
 
