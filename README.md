@@ -1,4 +1,6 @@
-# Github action: Lint with Vale ✅❎
+# DEPRECATED ⛔️ 
+
+## Github action: Lint with Vale ✅❎
 
 Automatically lint all modified text files in your GitHub pull requests. This GitHub action uses [Vale](https://errata-ai.github.io/vale/) to lint prose.
 
