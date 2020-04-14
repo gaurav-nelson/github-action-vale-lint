@@ -1,4 +1,5 @@
 # DEPRECATED ⛔️ 
+Use the official Vale action available at https://github.com/errata-ai/vale-action
 
 ## Github action: Lint with Vale ✅❎
 
